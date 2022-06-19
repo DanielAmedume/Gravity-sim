@@ -37,15 +37,15 @@ myfont = pygame.font.SysFont("monospace", 30)
 
 def createPlanets():
     planets = []
-    vel = 1335
-    mass = 600
-    planets.append(objects.planet(numpy.array((1280,0)),mass,10,numpy.array((vel,0)),blue,"planet 1"))
-    planets.append(objects.planet(numpy.array((1780,500)),mass,10,numpy.array((0,vel)),green,"planet 2"))
-    planets.append(objects.planet(numpy.array((1280,1000)),mass,10,numpy.array((-1*vel,0)),red,"planet 3"))
-    planets.append(objects.planet(numpy.array((780,500)),mass,10,numpy.array((0,-1*vel)),cyan,"planet 4"))
-    planets.append(objects.planet(numpy.array((1280,500)),1500*mass,100,numpy.array((0,0)),yellow,"Star"))
-
-
+    mid = width/2
+    big = 50000000
+    small = 100
+    vel = numpy.array((1900,0))
+    planets.append(objects.planet(numpy.array((mid,200)),big,20,numpy.array((-1250,0)),cyan,"star 1"))
+    planets.append(objects.planet(numpy.array((mid,900)),small,10,vel,purple,"planet"))
+    planets.append(objects.planet(numpy.array((mid,800)),big,20,numpy.array((1250,0)),red,"star 2"))
+    planets.append(objects.planet(numpy.array((mid,100)),small,10,-1*vel,green,"planet 2"))
+    planets.append(objects.planet(numpy.array((mid,500)),big*8,20,numpy.array((0,0)),white,"star 3"))
 
     return(planets)
 

@@ -13,8 +13,8 @@ class engine():
                 if obj == obj2:
                     continue
             
-                dist = self.getDist(obj.pos,obj2.pos) / 10
-                if dist < 10:
+                dist = self.getDist(obj.pos,obj2.pos)
+                if dist < 100:
                     continue
                 vector = obj2.pos - obj.pos
                 force = self.G * ((obj.mass * obj2.mass) / (dist*dist))
@@ -45,7 +45,7 @@ class engine():
                 collisionVector = current.pos - collider.pos
                 dist = self.getDist(current.pos, collider.pos)
 
-                if dist < 5:
+                if dist < 1:
                     norm = collisionVector / dist
                     delta = (current.radius + collider.radius) - dist
                     change = 0.5 * delta * norm
