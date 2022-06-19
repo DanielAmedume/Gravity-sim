@@ -1,0 +1,42 @@
+#two planets with 4 moons colliding:
+    Offset = 100
+    big  = 82000
+    small = 10
+    vel = 1000
+    mid = height/2
+    planets.append(objects.planet(numpy.array((Offset,mid)),big,30,numpy.array((vel/10,0)),blue,"earth"))
+    planets.append(objects.planet(numpy.array((Offset,mid + 100)),small,5,numpy.array((vel,0)),green,"moon"))
+    planets.append(objects.planet(numpy.array((Offset,mid - 200)),small,5,numpy.array((vel,0)),red,"moon2"))
+    planets.append(objects.planet(numpy.array((Offset,mid + 300)),small,5,numpy.array((vel,0)),cyan,"moon3"))
+    planets.append(objects.planet(numpy.array((Offset,mid - 400)),small,5,numpy.array((vel,0)),purple,"moon4"))
+
+
+
+    planets.append(objects.planet(numpy.array((width - Offset,mid)),big,30,numpy.array((-1*(vel/10),0)),darkPurple,"earth2"))
+    planets.append(objects.planet(numpy.array((width - Offset,mid + 100)),small,5,numpy.array((-1*vel,0)),darkYellow,"moon5"))
+    planets.append(objects.planet(numpy.array((width - Offset,mid - 200)),small,5,numpy.array((-1*vel,0)),darkRed,"moon6"))
+    planets.append(objects.planet(numpy.array((width - Offset,mid + 300)),small,5,numpy.array((-1*vel,0)),darkGreen,"moon7"))
+    planets.append(objects.planet(numpy.array((width - Offset,mid - 400)),small,5,numpy.array((-1*vel,0)),darkBlue,"moon8"))
+
+
+
+
+
+#4 planets orbiting one star
+	vel = 406#1335
+    mass = 80#600
+    planets.append(objects.planet(numpy.array((1280,0)),mass,10,numpy.array((vel,0)),blue,"planet 1"))
+    planets.append(objects.planet(numpy.array((1780,500)),mass,10,numpy.array((0,vel)),green,"planet 2"))
+    planets.append(objects.planet(numpy.array((1280,1000)),mass,10,numpy.array((-1*vel,0)),red,"planet 3"))
+    planets.append(objects.planet(numpy.array((780,500)),mass,10,numpy.array((0,-1*vel)),cyan,"planet 4"))
+    planets.append(objects.planet(numpy.array((1280,500)),1500*mass,100,numpy.array((0,0)),yellow,"Star"))
+
+
+#2 stars not working
+    mid = width/6
+    big = 10000
+    small = 1
+    vel = numpy.array((10,10))
+    planets.append(objects.planet(numpy.array((mid+100,500)),big,20,numpy.array((100,50)),cyan,"star 1"))
+    #planets.append(objects.planet(numpy.array((mid,500)),small,10,vel,purple,"planet"))
+    planets.append(objects.planet(numpy.array((mid,600)),big,20,numpy.array((100,0)),cyan,"star 2"))

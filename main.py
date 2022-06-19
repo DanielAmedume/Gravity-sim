@@ -7,10 +7,10 @@ import random
 
 
 global slowdown
-width = 1280
+width = 2560
 height = 1000
 FPS = 60
-slowdown = 1
+speed = 1
 
 
 white = (255, 255, 255)
@@ -37,33 +37,29 @@ myfont = pygame.font.SysFont("monospace", 30)
 
 def createPlanets():
     planets = []
-    planets.append(objects.planet(numpy.array((100,500)),82,30,numpy.array((10,0)),blue,"earth"))
-    
-    planets.append(objects.planet(numpy.array((100,400)),1,5,numpy.array((250,0)),green,"moon"))
-    planets.append(objects.planet(numpy.array((100,300)),1,5,numpy.array((150,0)),red,"moon2"))
-    planets.append(objects.planet(numpy.array((100,200)),1,5,numpy.array((100,0)),cyan,"moon3"))
-    planets.append(objects.planet(numpy.array((100,100)),1,5,numpy.array((100,0)),purple,"moon4"))
+    vel = 1335
+    mass = 600
+    planets.append(objects.planet(numpy.array((1280,0)),mass,10,numpy.array((vel,0)),blue,"planet 1"))
+    planets.append(objects.planet(numpy.array((1780,500)),mass,10,numpy.array((0,vel)),green,"planet 2"))
+    planets.append(objects.planet(numpy.array((1280,1000)),mass,10,numpy.array((-1*vel,0)),red,"planet 3"))
+    planets.append(objects.planet(numpy.array((780,500)),mass,10,numpy.array((0,-1*vel)),cyan,"planet 4"))
+    planets.append(objects.planet(numpy.array((1280,500)),1500*mass,100,numpy.array((0,0)),yellow,"Star"))
 
-
-    """
-    planets.append(objects.planet(numpy.array((1128,400)),82,30,numpy.array((-150,0)),darkPurple,"earth2"))
-    planets.append(objects.planet(numpy.array((1128,300)),1,5,numpy.array((-250,0)),darkYellow,"moon5"))
-    planets.append(objects.planet(numpy.array((1128,200)),1,5,numpy.array((-150,0)),darkRed,"moon6"))
-    planets.append(objects.planet(numpy.array((1128,100)),1,5,numpy.array((-100,0)),darkGreen,"moon7"))
-    planets.append(objects.planet(numpy.array((1128,0)),1,5,numpy.array((-100,0)),darkBlue,"moon8"))
-    """
 
 
     return(planets)
 
 
+def calcMagnitude(x):
+    return(math.sqrt(x[0]**2+x[1]**2))
+
 planets = createPlanets()
 
 def createStars():
-    colours = [(255,255,255),(255,255,random.randint(0,255))]
+    colour = (255,255,random.randint(0,255))
     stars = []
     for i in range(1,random.randint(1,100)):
-            stars.append([screen, random.choice(colours),(random.randint(0,width),random.randint(0,height)),random.randint(1,10)])
+            stars.append([screen, colour,(random.randint(0,width),random.randint(0,height)),random.randint(1,10)])
     return(stars)
 
 stars = createStars()
@@ -71,20 +67,21 @@ showLines = 0
 showPlanets = 0
 showNames = 0
 showStars = 0
+frameTimes = []
 
 running = True
 while running:
 
     dt = clock.tick(FPS) / 1000
+    frameTimes.append(dt)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_EQUALS:
-                slowdown += 1
+                speed /=2
             elif event.key == pygame.K_MINUS:
-                if slowdown != 1:
-                    slowdown -= 1
+                speed *=2
             elif event.key == pygame.K_r:
                 planets = createPlanets()
                 stars = createStars()
@@ -98,7 +95,7 @@ while running:
                   showNames += 1
             elif event.key == pygame.K_s:
                 showStars +=1
-    #dt /=slowdown
+    dt /= speed
     screen.fill(black)
     engine.update(planets,dt)
 
@@ -116,10 +113,12 @@ while running:
             
     if showNames %2 == 0:
         for planet in planets:
-            screen.blit(myfont.render(planet.debugName, 1, planet.colour),(planet.pos[0],planet.pos[1] + planet.radius + 0.1*planet.radius))
+            screen.blit(myfont.render(f"Name:{planet.debugName}, Velocity:{math.ceil(calcMagnitude(planet.velocity))}", 1, white),(planet.pos[0],planet.pos[1] + planet.radius + 0.1*planet.radius))
         
-
-    screen.blit(myfont.render(f"FPS:{math.floor(1/dt)}, DT:{dt}, slowdown:{slowdown}, speed:{1/slowdown}x", 1, white),(10,50))
+    if len(frameTimes) % 100 == 0:
+        frameTimes.pop(0)
+    
+    screen.blit(myfont.render(f"FPS:{math.floor(1/numpy.average(frameTimes))}, Speed: {1/speed}x", 1, white),(10,50))
     
     pygame.display.flip()       
 pygame.quit()

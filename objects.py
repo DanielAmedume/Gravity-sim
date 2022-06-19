@@ -20,7 +20,7 @@ class planet():
     def accelerate(self,dt):
         acceleration = self.force / self.mass
         
-        self.acceleration = numpy.add(self.acceleration,acceleration)
+        self.acceleration = numpy.add(self.acceleration,acceleration*dt)
         self.force = numpy.array((0,0))
 
     def applyAcceleration(self,dt):
