@@ -1,4 +1,5 @@
 import math
+import numpy
 class engine():
     def __init__(self):
         self.G =1 #6.67x10^-11
@@ -30,10 +31,33 @@ class engine():
         for obj in objects:
             obj.updatePos(dt)
 
+            
+    def solveCollisions(self,objects):
+        for current in objects:
+            for collider in objects:
+                
+                if current == collider:
+                    break
 
+                collisionVector = current.pos - collider.pos
+                dist = self.getDist(current.pos, collider.pos)
+                
+                if dist < current.radius + collider.radius:
+                    norm = collisionVector / dist
+                    delta = (current.radius + collider.radius) - dist
+                    change = 0.5 * delta * norm
+                    if collider.mass > current.mass:
+                        current.pos = numpy.add(current.pos,change*2,casting='unsafe')
+                    else:
+                        collider.pos = numpy.subtract(collider.pos,change*2,casting='unsafe')
+
+    
+
+    
     def update(self,objects,dt):
         self.applyGravity(objects,dt)
         self.resolveAcceleration(objects,dt)
         self.applyAcceleration(objects,dt)
         self.updatePositions(objects,dt)
+        self.solveCollisions(objects)
         

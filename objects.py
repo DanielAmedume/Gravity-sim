@@ -31,10 +31,5 @@ class planet():
         self.force = numpy.array((0,0))
         self.acceleration = numpy.array((0,0))
         self.positions.append(list(self.pos))
-        """
-        if self.pos[0] > 1280 or self.pos[0] < 0:
-            self.velocity[0] *= -1
-        if self.pos[1] < 0 or self.pos[1] > 1000:
-            self.velocity *= -1
-        """
         
+

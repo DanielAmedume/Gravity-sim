@@ -21,6 +21,11 @@ blue = (0, 0, 255)
 yellow = (255,255,0)
 cyan = (0,255,255)
 purple = (255,0,255)
+darkPurple = (128,0,128)
+darkYellow = (128,128,0)
+darkRed = (128,0,0)
+darkGreen = (0,128,0)
+darkBlue = (0,0,128)
 
 
 pygame.init()
@@ -30,17 +35,24 @@ clock = pygame.time.Clock()
 engine = solver.engine()
 myfont = pygame.font.SysFont("monospace", 30)
 
-#bg = pygame.image.load('bg.png')
-#bg = pygame.transform.scale(bg, (width, height))
-
-
 def createPlanets():
     planets = []
-    planets.append(objects.planet(numpy.array((100,500)),82,30,numpy.array((10,0)),blue,"earth")) #earth
-    planets.append(objects.planet(numpy.array((100,400)),1,5,numpy.array((250,0)),green,"moon")) #moon
-    planets.append(objects.planet(numpy.array((100,300)),1,5,numpy.array((200,0)),red,"moon2"))
-    planets.append(objects.planet(numpy.array((100,200)),1,5,numpy.array((175,0)),cyan,"moon3"))
+    planets.append(objects.planet(numpy.array((100,500)),82,30,numpy.array((10,0)),blue,"earth"))
+    
+    planets.append(objects.planet(numpy.array((100,400)),1,5,numpy.array((250,0)),green,"moon"))
+    planets.append(objects.planet(numpy.array((100,300)),1,5,numpy.array((150,0)),red,"moon2"))
+    planets.append(objects.planet(numpy.array((100,200)),1,5,numpy.array((100,0)),cyan,"moon3"))
     planets.append(objects.planet(numpy.array((100,100)),1,5,numpy.array((100,0)),purple,"moon4"))
+
+
+    """
+    planets.append(objects.planet(numpy.array((1128,400)),82,30,numpy.array((-150,0)),darkPurple,"earth2"))
+    planets.append(objects.planet(numpy.array((1128,300)),1,5,numpy.array((-250,0)),darkYellow,"moon5"))
+    planets.append(objects.planet(numpy.array((1128,200)),1,5,numpy.array((-150,0)),darkRed,"moon6"))
+    planets.append(objects.planet(numpy.array((1128,100)),1,5,numpy.array((-100,0)),darkGreen,"moon7"))
+    planets.append(objects.planet(numpy.array((1128,0)),1,5,numpy.array((-100,0)),darkBlue,"moon8"))
+    """
+
 
     return(planets)
 
@@ -57,7 +69,8 @@ def createStars():
 stars = createStars()
 showLines = 0
 showPlanets = 0
-
+showNames = 0
+showStars = 0
 
 running = True
 while running:
@@ -75,22 +88,23 @@ while running:
             elif event.key == pygame.K_r:
                 planets = createPlanets()
                 stars = createStars()
-
             elif event.key == pygame.K_l:
                 showLines +=1
-
             elif event.key == pygame.K_p:
                   showPlanets += 1
-
-    dt /=slowdown
-
-    #screen.blit(bg,(0,0))
+            elif event.key == pygame.K_n:
+                  showNames += 1
+            elif event.key == pygame.K_n:
+                  showNames += 1
+            elif event.key == pygame.K_s:
+                showStars +=1
+    #dt /=slowdown
     screen.fill(black)
-    
     engine.update(planets,dt)
 
-    for star in stars:
-        pygame.draw.circle(star[0],star[1],star[2],star[3])
+    if showStars %2 ==0:
+        for star in stars:
+            pygame.draw.circle(star[0],star[1],star[2],star[3])
         
     if showLines %2 ==0:
         for planet in planets:
@@ -99,7 +113,10 @@ while running:
     if showPlanets %2 == 0:
         for planet in planets:
             pygame.draw.circle(screen,planet.colour,planet.pos,planet.radius)
-
+            
+    if showNames %2 == 0:
+        for planet in planets:
+            screen.blit(myfont.render(planet.debugName, 1, planet.colour),(planet.pos[0],planet.pos[1] + planet.radius + 0.1*planet.radius))
         
 
     screen.blit(myfont.render(f"FPS:{math.floor(1/dt)}, DT:{dt}, slowdown:{slowdown}, speed:{1/slowdown}x", 1, white),(10,50))
