@@ -12,9 +12,12 @@ class engine():
             for obj2 in objects:
                 if obj == obj2:
                     continue
+                
+                if not obj2.canMove:
+                    continue
             
                 dist = self.getDist(obj.pos,obj2.pos)
-                if dist < 100:
+                if dist < 10:
                     continue
                 vector = obj2.pos - obj.pos
                 force = self.G * ((obj.mass * obj2.mass) / (dist*dist))
