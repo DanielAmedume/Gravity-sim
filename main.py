@@ -45,8 +45,7 @@ def createPlanets():
     big = 50000000
     small = 1
     vel = numpy.array((600,0))
-    planets.append(objects.fixedMass(numpy.array((mid-300,height/2)),big,20,numpy.array((200,0)),cyan,"star 1"))
-    planets.append(objects.fixedMass(numpy.array((mid+300,height/2)),big,20,numpy.array((-200,0)),red,"star 2"))
+    #planets.append(objects.fixedMass(numpy.array((mid,height/2)),big,20,numpy.array((200,0)),cyan,"star 1"))
     return(planets)
 
 

@@ -17,7 +17,7 @@ class engine():
                     continue
             
                 dist = self.getDist(obj.pos,obj2.pos)
-                if dist < 10:
+                if dist < 100:
                     continue
                 vector = obj2.pos - obj.pos
                 force = self.G * ((obj.mass * obj2.mass) / (dist*dist))
