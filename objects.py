@@ -15,7 +15,7 @@ class planet():
 
     def applyForce(self,force):
         
-        self.force = numpy.add(self.force, force, casting="unsafe")
+        self.force = numpy.add(self.force, force)# casting="unsafe")
 
     def accelerate(self,dt):
         acceleration = self.force / self.mass
@@ -31,9 +31,11 @@ class planet():
         self.force = numpy.array((0,0))
         self.acceleration = numpy.array((0,0))
         self.positions.append(list(self.pos))
+        if len(self.positions) > 99:
+            self.positions.pop(0)
         
 class fixedMass():
-    def __init__(self,pos,mass,radius,velocity,colour,name):
+    def __init__(self,pos,mass,radius,colour,name):
         self.pos = pos
         self.mass = mass
         self.radius = radius

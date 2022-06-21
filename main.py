@@ -35,17 +35,22 @@ clock = pygame.time.Clock()
 engine = solver.engine()
 myfont = pygame.font.SysFont("monospace", 30)
 
-mass = 1000000
+mass = 100000000
 density = 5500 #earth's aproximate density
 radius = (((mass / density) / (4/3 * 3.14)) ** (1/3))
 
 def createPlanets():
+    localMass = mass
     planets = []
-    mid = width/2
-    big = 50000000
-    small = 1
-    vel = numpy.array((600,0))
-    #planets.append(objects.fixedMass(numpy.array((mid,height/2)),big,20,numpy.array((200,0)),cyan,"star 1"))
+    offset = (width/2, height/2)
+    numPoints = 3
+    for index in range(numPoints):
+        r = 200
+        radius = (((mass / density) / (4/3 * 3.14)) ** (1/3))
+        pos = numpy.array([r*math.cos((index*2*math.pi)/numPoints),r*math.sin((index*2*math.pi)/numPoints)])
+        pos += offset
+        planets.append(objects.planet(pos,localMass,radius,numpy.array((0,0)),(random.randint(0,255),random.randint(0,255),random.randint(0,255)),str(index)))
+        #localMass *= 1.1
     return(planets)
 
 
