@@ -5,13 +5,39 @@ import solver
 import math
 import random
 
+def createPlanets():
+    planets = []
+    #Create planets or paste config here
+    #Leave empty for no starting planets
+    #----------------------------------#
 
-global slowdown
+    localMass = mass
+    planets = []
+    offset = (width/2, height/2)
+    numPoints = 5
+    for index in range(numPoints):
+        r = 200
+        radius = (((mass / density) / (4/3 * 3.14)) ** (1/3))
+        pos = numpy.array([r*math.cos((index*2*math.pi)/numPoints),r*math.sin((index*2*math.pi)/numPoints)])
+        pos += offset
+        planets.append(objects.planet(pos,localMass,radius,numpy.array((0,0)),(random.randint(0,255),random.randint(0,255),random.randint(0,255)),str(index)))
+
+    #----------------------------------#
+
+    return(planets)
+
+def calcMagnitude(x):
+    return(math.sqrt(x[0]**2+x[1]**2))
+
+def createStars():
+    colour = (255,255,random.randint(0,255))
+    stars = []
+    for i in range(1,random.randint(1,100)):
+            stars.append([screen, colour,(random.randint(0,width),random.randint(0,height)),random.randint(1,10)])
+    return(stars)
+
 width = 2560
 height = 1000
-FPS = 60
-speed = 1
-
 
 white = (255, 255, 255)
 black = (0, 0, 0)
@@ -27,46 +53,16 @@ darkRed = (128,0,0)
 darkGreen = (0,128,0)
 darkBlue = (0,0,128)
 
-
 pygame.init()
 screen = pygame.display.set_mode((width,height))
 pygame.display.set_caption("Gravity sim")
 clock = pygame.time.Clock()
 engine = solver.engine()
 myfont = pygame.font.SysFont("monospace", 30)
-
+FPS = 60
+speed = 1
 mass = 100000000
 density = 5500 #earth's aproximate density
-radius = (((mass / density) / (4/3 * 3.14)) ** (1/3))
-
-def createPlanets():
-    localMass = mass
-    planets = []
-    offset = (width/2, height/2)
-    numPoints = 3
-    for index in range(numPoints):
-        r = 200
-        radius = (((mass / density) / (4/3 * 3.14)) ** (1/3))
-        pos = numpy.array([r*math.cos((index*2*math.pi)/numPoints),r*math.sin((index*2*math.pi)/numPoints)])
-        pos += offset
-        planets.append(objects.planet(pos,localMass,radius,numpy.array((0,0)),(random.randint(0,255),random.randint(0,255),random.randint(0,255)),str(index)))
-        #localMass *= 1.1
-    return(planets)
-
-
-def calcMagnitude(x):
-    return(math.sqrt(x[0]**2+x[1]**2))
-
-planets = createPlanets()
-
-def createStars():
-    colour = (255,255,random.randint(0,255))
-    stars = []
-    for i in range(1,random.randint(1,100)):
-            stars.append([screen, colour,(random.randint(0,width),random.randint(0,height)),random.randint(1,10)])
-    return(stars)
-
-stars = createStars()
 showLines = 0
 showPlanets = 0
 showNames = 0
@@ -74,13 +70,17 @@ showStars = 0
 frameTimes = []
 isCreating = False
 planetNo = 1
+planets = createPlanets()
+stars = createStars()
 
 running = True
 while running:
 
     dt = clock.tick(FPS) / 1000
-    radius = (((mass / density) / (4/3 * 3.14)) ** (1/3))
+    dt /= speed
     frameTimes.append(dt)
+    planets = engine.update(planets,dt)
+    
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
@@ -88,6 +88,7 @@ while running:
         elif event.type == pygame.MOUSEBUTTONDOWN and isCreating == False and event.button == 1:
             isCreating = True
             pos1 = pygame.mouse.get_pos()
+            radius = (((mass / density) / (4/3 * 3.14)) ** (1/3)) * 2
             tmpColour = (random.randint(0,255),random.randint(0,255),random.randint(0,255))
 
         elif event.type == pygame.MOUSEBUTTONUP and event.button == 1:
@@ -102,7 +103,7 @@ while running:
 
         elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 5:
             mass /= 1.1
-    
+
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_EQUALS:
                 speed /=2
@@ -122,10 +123,9 @@ while running:
                   showNames += 1
             elif event.key == pygame.K_s:
                 showStars +=1
-    dt /= speed
-    screen.fill(black)
-    engine.update(planets,dt)
 
+    #render to screen
+    screen.fill(black)
     if showStars %2 ==0:
         for star in stars:
             pygame.draw.circle(star[0],star[1],star[2],star[3])
@@ -145,13 +145,13 @@ while running:
             
     if showNames %2 == 0:
         for planet in planets:
-            #, Velocity:{math.floor(calcMagnitude(planet.velocity))}"
             screen.blit(myfont.render(str(planet.debugName), 1, white),(planet.pos[0],planet.pos[1] + planet.radius + 0.1*planet.radius))
         
     if len(frameTimes) % 100 == 0:
         frameTimes.pop(0)
     
     screen.blit(myfont.render(f"FPS:{math.floor(1/numpy.average(frameTimes))}, Speed: {1/speed}x, New mass = {mass}", 1, white),(10,50))
-    
-    pygame.display.flip()       
+
+    pygame.display.flip()
+  
 pygame.quit()

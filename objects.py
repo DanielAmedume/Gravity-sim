@@ -14,8 +14,7 @@ class planet():
         self.canMove = True
 
     def applyForce(self,force):
-        
-        self.force = numpy.add(self.force, force)# casting="unsafe")
+        self.force = numpy.add(self.force, force)
 
     def accelerate(self,dt):
         acceleration = self.force / self.mass
@@ -47,14 +46,3 @@ class fixedMass():
         self.debugName = name
         self.canMove = False
 
-    def applyForce(self,force):
-        pass
-    
-    def accelerate(self,dt):
-        pass
-    
-    def applyAcceleration(self,dt):
-        pass
-
-    def updatePos(self,dt):
-        pass
