@@ -21,8 +21,9 @@ class engine():
             
                 dist = self.getDist(obj.pos,obj2.pos)
 
-                if dist <= (obj.radius + obj2.radius) * 0.9:
+                if dist <= (obj.radius + obj2.radius) * 0.3:
                     continue
+
                 vector = obj.pos - obj2.pos
                 force = self.G * ((obj.mass * obj2.mass) / (dist*dist))
                 norm = vector / dist
@@ -96,7 +97,7 @@ class engine():
         return(objects)
     
     def update(self,objects,dt):
-        objects = self.merge(objects)
+        #objects = self.merge(objects)
         self.applyGravity(objects,dt)
         self.resolveAcceleration(objects,dt)
         self.applyAcceleration(objects,dt)

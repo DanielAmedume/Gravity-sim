@@ -4,24 +4,13 @@ import objects
 import solver
 import math
 import random
+import copy
 
 def createPlanets():
     planets = []
     #Create planets or paste config here
     #Leave empty for no starting planets
     #----------------------------------#
-
-    localMass = mass
-    planets = []
-    offset = (width/2, height/2)
-    numPoints = 5
-    for index in range(numPoints):
-        r = 200
-        radius = (((mass / density) / (4/3 * 3.14)) ** (1/3))
-        pos = numpy.array([r*math.cos((index*2*math.pi)/numPoints),r*math.sin((index*2*math.pi)/numPoints)])
-        pos += offset
-        planets.append(objects.planet(pos,localMass,radius,numpy.array((0,0)),(random.randint(0,255),random.randint(0,255),random.randint(0,255)),str(index)))
-
     #----------------------------------#
 
     return(planets)
@@ -72,13 +61,20 @@ isCreating = False
 planetNo = 1
 planets = createPlanets()
 stars = createStars()
+paused = 0
 
 running = True
 while running:
 
-    dt = clock.tick(FPS) / 1000
+    #dt = 1/FPS
+    clock.tick(FPS)
+    dt = clock.get_time() / 1000
     dt /= speed
+    calcDt = dt
     frameTimes.append(dt)
+    if paused % 2 == 0:
+        dt = 0
+
     planets = engine.update(planets,dt)
     
     for event in pygame.event.get():
@@ -94,7 +90,7 @@ while running:
         elif event.type == pygame.MOUSEBUTTONUP and event.button == 1:
             isCreating = False
             pos2 = pygame.mouse.get_pos()
-            vel = numpy.array(pos1)-numpy.array(pos2)
+            vel = (numpy.array(pos1)-numpy.array(pos2)) * 2
             planets.append(objects.planet(pos1,mass,radius,vel,tmpColour,planetNo))
             planetNo += 1
 
@@ -123,6 +119,8 @@ while running:
                   showNames += 1
             elif event.key == pygame.K_s:
                 showStars +=1
+            elif event.key == pygame.K_j:
+                paused +=1
 
     #render to screen
     screen.fill(black)
@@ -142,6 +140,16 @@ while running:
         pygame.draw.circle(screen,tmpColour,pos1,radius)
         posTMP = pygame.mouse.get_pos()
         pygame.draw.line(screen,white,pos1,posTMP)
+        pos2 = pygame.mouse.get_pos()
+        vel = (numpy.array(pos1)-numpy.array(pos2)) * 2
+        tmpPlanet = objects.planet(pos1,mass,0,vel,red,"")
+        calculationPlanets = copy.deepcopy(planets)
+        calculationPlanets.append(tmpPlanet)
+        while len(tmpPlanet.positions) < 50:
+            calculationPlanets = engine.update(calculationPlanets, calcDt)
+        for i in calculationPlanets:
+            pygame.draw.lines(screen,i.colour,False,i.positions)            
+        
             
     if showNames %2 == 0:
         for planet in planets:
